@@ -73,6 +73,7 @@ public class mathFunc {
     }
 
     public static double power(double base, double exponent) {
+        //belum
         return 2;
     }
 
