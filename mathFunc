@@ -1,0 +1,93 @@
+import java.security.InvalidParameterException;
+
+public class mathFunc {
+
+    public static final double PI = 3.14159;
+
+    public static void main(String[] args) {
+        System.out.println(ln(2));
+    }
+
+    public static double abs(double x) {
+        if (x < 0) {
+            return x * -1;
+        } else {
+            return x;
+        }
+    }
+
+    public static int factorial(int x) {
+        if (x < 0) {
+            throw new IllegalArgumentException("Cannot use negative interger");
+        }
+
+        else if (x == 0 || x == 1) {
+            return 1;
+        }
+
+        int res = 1;
+        for (int i = 2; i < x; i++) {
+            res *= i;
+        }
+        return res;
+    }
+
+    public static double toRad(double degree) {
+        return degree * (PI / 180);
+    }
+
+    public static double toDeg(double radian) {
+        return radian * (180 / PI);
+    }
+
+    public static double sine(double x, int iteration) {
+        // Belum
+        double res = 0;
+        for (int k = 0; k <= iteration; k++) {
+            res += (-1);
+        }
+        return res;
+    }
+
+    public static double power(double base, int exponent) {
+        if (exponent <= 0) {
+            if (base == 0) {
+                throw new InvalidParameterException("Invalid base for negative exponents");
+            }
+
+        }
+
+        if (exponent == 0) {
+            return 1;
+        }
+
+        if (exponent == 1) {
+            return base;
+        }
+
+        double res = 1;
+        for (int k = 1; k <= exponent; k++) {
+            res *= base;
+        }
+        return res;
+    }
+
+    public static double power(double base, double exponent) {
+        return 2;
+    }
+
+    public static double ln(double x) {
+        if (x <= 0) {
+            throw new InvalidParameterException("ln cannot be zero or less");
+        }
+
+        double sum = 0.0;
+        double u = (x - 1.0) / (x + 1.0);
+
+        for (int k = 0; k < 7; k++) {
+            sum += 1.0 / (2 * k + 1) * power(u, 2 * k + 1);
+        }
+
+        return sum * 2;
+    }
+}
