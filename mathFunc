@@ -1,13 +1,14 @@
 import java.security.InvalidParameterException;
 
 public class mathFunc {
-
-    public static final double PI = 3.14159;
+    public static final int SERIES_ITERATION = 10;
+    public static final double PI = 3.141592653589793;
 
     public static void main(String[] args) {
-        System.out.println(ln(2));
+        System.out.println(tan(PI));
     }
 
+    // Nilai absolut (matematika)
     public static double abs(double x) {
         if (x < 0) {
             return x * -1;
@@ -16,7 +17,17 @@ public class mathFunc {
         }
     }
 
-    public static int factorial(int x) {
+    // Fungsi dari e^x (matematika)
+    public static double exponential(double x){
+        double res = 0;
+        for(int k=0;k < 10;k++){
+            res += power(x,k)/factorial(k);
+        }
+        return res;
+    } 
+
+    // Fungsi faktorial (matematika)
+    public static double factorial(int x) {
         if (x < 0) {
             throw new IllegalArgumentException("Cannot use negative interger");
         }
@@ -25,36 +36,83 @@ public class mathFunc {
             return 1;
         }
 
-        int res = 1;
-        for (int i = 2; i < x; i++) {
+        double res = 1;
+        for (int i=1; i < x+1; i++) {
             res *= i;
         }
         return res;
     }
 
+    // Mengubah derajat ke radian (matematika)
     public static double toRad(double degree) {
         return degree * (PI / 180);
     }
 
+    // Mengubah radian ke derajat (matematika)
     public static double toDeg(double radian) {
         return radian * (180 / PI);
     }
 
-    public static double sine(double x, int iteration) {
-        // Belum
+    // Fungsi sinus, dimana ini hitung menggunakan penjumlahan deret (baca taylor series for sin(x))
+    public static double sine(double x) {
+        double angle = radReduction(x);
+        
         double res = 0;
-        for (int k = 0; k <= iteration; k++) {
-            res += (-1);
+        for (int k = 0; k <= SERIES_ITERATION; k++) {
+            res += (power(-1,k)*power(angle,2*k+1))/factorial(2*k+1);
         }
+        
+        // Format secara manual (soalnya gaboleh pake library (atau mungkin itu cuman buat fungsi dasar ya, ndak tau))
+        if(res > 0 && res < 9E-7){
+            return 0;
+        }
+
+        if(res > -1 && res < -9E-7){
+            return -1;
+        }
+
         return res;
     }
 
+    // Fungsi cosinus, dimana ini hitung menggunakan penjumlahan deret (baca taylor series for cos(x))
+    public static double cosine(double x) {
+        double angle = radReduction(x);
+        
+        double res = 0;
+        for (int k = 0; k <= SERIES_ITERATION; k++) {
+            res += (power(-1,k)*power(angle,2*k))/factorial(2*k);
+        }
+
+        if(res > 0 && res < 9E-6){
+            return 0;
+        }
+
+        return res;
+    }
+
+    // Fungsi tan, dimana ini hanya memanggil sin dan cos
+    public static double tan(double x) {
+        return sine(x)/cosine(x);
+    }
+
+    // Formatting radian
+    public static double radReduction(double x){
+        double reduced = x % (2*PI);
+
+        if(reduced < 0){
+            reduced += 2*PI;
+        }
+
+        return reduced;
+    }
+
+    // Fungsi eksponen untuk pangkat bilangan bulat (matematika)
     public static double power(double base, int exponent) {
-        if (exponent <= 0) {
+        if (exponent < 0) {
             if (base == 0) {
                 throw new InvalidParameterException("Invalid base for negative exponents");
             }
-
+            return(1/power(base,-exponent));
         }
 
         if (exponent == 0) {
@@ -66,17 +124,18 @@ public class mathFunc {
         }
 
         double res = 1;
-        for (int k = 1; k <= exponent; k++) {
+        for (int k = 0; k < exponent; k++) {
             res *= base;
         }
         return res;
     }
 
+    // Fungsi eksponen untuk pangkat bilangan real (matematika)
     public static double power(double base, double exponent) {
-        //belum
-        return 2;
+        return exponential(exponent * ln(base));
     }
 
+    // Fungsi natural log (matematika)
     public static double ln(double x) {
         if (x <= 0) {
             throw new InvalidParameterException("ln cannot be zero or less");
@@ -85,7 +144,7 @@ public class mathFunc {
         double sum = 0.0;
         double u = (x - 1.0) / (x + 1.0);
 
-        for (int k = 0; k < 7; k++) {
+        for (int k = 0; k < SERIES_ITERATION; k++) {
             sum += 1.0 / (2 * k + 1) * power(u, 2 * k + 1);
         }
 
